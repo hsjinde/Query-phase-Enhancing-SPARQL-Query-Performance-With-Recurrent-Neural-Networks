@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Research/thesis codebase for an **end-to-end Knowledge Graph Question Answering (KGQA)** system over DBpedia. It takes a natural-language question, tags its tokens with semantic roles, resolves them to DBpedia URIs, classifies the question into a SPARQL structural template, generates and executes candidate SPARQL queries against the live DBpedia endpoint, and filters answers by expected answer type. Comments and prints are in Traditional Chinese; identifiers are in English.
 
-There is **no build system, no test suite, no `requirements.txt`, and no packaging** — scripts are run directly with `python <script>.py` from the repo root. Import paths are relative to the repo root, and model/data paths are hardcoded as `./model/...`, `./data/...`, `./answer/...`, so scripts must be run with the working directory set to the repo root.
+There is **no build system, no test suite, and no packaging** — scripts are run directly with `python <script>.py` from the repo root. `requirements.txt` holds a verified-compatible dependency set (Python 3.9); `demo.py` is a minimal end-to-end runner. Import paths are relative to the repo root, and model/data paths are hardcoded as `./model/...`, `./data/...`, `./answer/...`, so scripts must be run with the working directory set to the repo root.
 
 ## Running
 

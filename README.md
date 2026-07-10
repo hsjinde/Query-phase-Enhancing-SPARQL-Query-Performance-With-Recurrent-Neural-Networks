@@ -61,14 +61,19 @@ template.
 
 ## Setup
 
-Developed on **Python 3.7 (CPU)**.
+Runs on **Python 3.9 (CPU)**. The deep-learning dependencies are 2022-era and
+version-sensitive; the pinned set in `requirements.txt` was verified to run
+end-to-end. Using [uv](https://github.com/astral-sh/uv):
 
 ```bash
-pip install -r requirements.txt
+uv venv --python 3.9
+uv pip install -r requirements.txt
 
 # One-time NLTK data
-python -c "import nltk; nltk.download('punkt'); nltk.download('wordnet'); nltk.download('averaged_perceptron_tagger')"
+uv run python -c "import nltk; [nltk.download(p) for p in ('punkt','punkt_tab','wordnet','omw-1.4','averaged_perceptron_tagger','averaged_perceptron_tagger_eng')]"
 ```
+
+(Plain `pip install -r requirements.txt` into a Python 3.9 virtualenv works too.)
 
 Running the pipeline additionally requires:
 - network access to the public endpoint `http://dbpedia.org/sparql`
@@ -86,6 +91,31 @@ python end2end/end2end_eval.py   # score a produced result spreadsheet
 
 There is no CLI: the questions to run and the output filename are configured
 inline in each script's `main()`.
+
+### Quick demo
+
+[`demo.py`](demo.py) runs the full pipeline on a couple of sample questions and
+prints each stage (semantic roles → linked URIs → template → answer):
+
+```bash
+uv run python demo.py
+```
+
+Actual output (querying live DBpedia):
+
+```
+問句: What is the capital of Japan?
+模板: A
+實體: {'Japan': '<http://dbpedia.org/resource/Japan>@'} | 屬性: ['capital'] | 類別: {}
+答案型別: Thing
+>>> 答案: ['http://dbpedia.org/resource/Tokyo']
+
+問句: Who is the wife of Barack Obama?
+模板: A
+實體: {'Barack Obama': '<http://dbpedia.org/resource/Barack_Obama>@'} | 屬性: ['wife'] | 類別: {}
+答案型別: Person or Organization
+>>> 答案: [... 'http://dbpedia.org/resource/Michelle_Obama' ...]
+```
 
 ## Datasets
 

@@ -1,21 +1,28 @@
-# Developed and tested on Python 3.7 (CPU).
-# The three deep-learning packages are version-sensitive to each other;
-# the pinned combination below is a known-compatible set.
+# Verified working set on Python 3.9 (CPU), tested end-to-end in July 2026.
+# These are 2022-era pinned deep-learning libraries; the versions below are
+# mutually ABI-compatible (TensorFlow 2.8 requires the older NumPy 1.21 ABI,
+# so SciPy / scikit-learn / pandas are pinned to match).
+#
+# Quick start with uv:
+#   uv venv --python 3.9
+#   uv pip install -r requirements.txt
+#   python -c "import nltk; [nltk.download(p) for p in ('punkt','punkt_tab','wordnet','omw-1.4','averaged_perceptron_tagger','averaged_perceptron_tagger_eng')]"
 
+# --- Deep learning (version-sensitive to each other) ---
 tensorflow==2.8.0
-tensorflow-addons==0.16.1
-transformers==4.18.0
-typeguard==2.13.3
+tensorflow-addons==0.16.1      # provides the CRF layer used by ERC_Tagger
+transformers==4.18.0           # bert-base-cased
+typeguard==2.13.3              # tfa 0.16 breaks on typeguard 3.x
+protobuf==3.19.6               # TF 2.8 requires protobuf < 3.20
 
-# Classic ML / data
-scikit-learn>=1.0
-joblib>=1.1
-numpy>=1.21
-pandas>=1.3
-openpyxl>=3.0          # pandas engine for .xlsx read/write
+# --- Numeric stack (pinned to the NumPy 1.21 ABI) ---
+numpy==1.21.6
+scipy==1.7.3
+scikit-learn==1.0.2            # loads model/LCQUAD/svm_LCQUAD
+pandas==1.5.3
+openpyxl>=3.0                  # pandas engine for .xlsx
 
-# NLP
-nltk>=3.6              # needs: punkt, wordnet, averaged_perceptron_tagger
-
-# Knowledge-graph querying
+# --- NLP / knowledge-graph ---
+nltk>=3.6                      # needs: punkt, wordnet, averaged_perceptron_tagger
 SPARQLWrapper>=1.8
+joblib>=1.1
