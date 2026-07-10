@@ -1,0 +1,49 @@
+# =============================================================
+#  Large models / datasets / embeddings — keep local, never push
+#  (26GB+ total; far over GitHub's 100MB/file limit)
+# =============================================================
+model/
+SQLite/
+data/
+Embedding/
+tagger/
+answer/
+
+# Model / data binaries (belt-and-suspenders, in case they move)
+*.h5
+*.pickle
+*.pkl
+*.sqlite
+*.joblib
+
+# =============================================================
+#  Experiment result spreadsheets (temporary run outputs)
+# =============================================================
+*.xlsx
+end2end/TEMP/
+
+# =============================================================
+#  Python
+# =============================================================
+__pycache__/
+*.py[cod]
+*.egg-info/
+.ipynb_checkpoints/
+
+# =============================================================
+#  Virtual environments
+# =============================================================
+.venv/
+venv/
+env/
+
+# =============================================================
+#  Office / OS / editor temp & lock files
+# =============================================================
+~$*
+*.tmp
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

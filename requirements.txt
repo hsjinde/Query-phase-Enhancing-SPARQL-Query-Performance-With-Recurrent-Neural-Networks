@@ -1,0 +1,21 @@
+# Developed and tested on Python 3.7 (CPU).
+# The three deep-learning packages are version-sensitive to each other;
+# the pinned combination below is a known-compatible set.
+
+tensorflow==2.8.0
+tensorflow-addons==0.16.1
+transformers==4.18.0
+typeguard==2.13.3
+
+# Classic ML / data
+scikit-learn>=1.0
+joblib>=1.1
+numpy>=1.21
+pandas>=1.3
+openpyxl>=3.0          # pandas engine for .xlsx read/write
+
+# NLP
+nltk>=3.6              # needs: punkt, wordnet, averaged_perceptron_tagger
+
+# Knowledge-graph querying
+SPARQLWrapper>=1.8
