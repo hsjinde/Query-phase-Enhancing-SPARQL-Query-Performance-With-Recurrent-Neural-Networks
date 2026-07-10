@@ -21,7 +21,7 @@ python QA_withDBpedia.py
 python end2end/end2end_eval.py
 ```
 
-Both pipeline entry points force CPU (`CUDA_VISIBLE_DEVICES=-1`). There is **no CLI/argument interface**: the set of questions to run and the output `.xlsx` filename are edited inline in `main()` (e.g. `EndtoEnd.py` iterates a hardcoded list of row indices and writes `LCQUADendtoendnew_380.xlsx`). To change what runs, edit those literals rather than passing flags.
+Both pipeline entry points force CPU (`CUDA_VISIBLE_DEVICES=-1`). `EndtoEnd.py` loads the models once and then runs an **interactive prompt** (`input()` loop) that answers typed questions until you enter `q`. `QA_withDBpedia.py` still has no CLI: the questions to run and the output `.xlsx` filename are edited inline in its `main()`.
 
 ### Runtime dependencies (install manually)
 
@@ -41,7 +41,7 @@ The flow in `EndtoEnd.py` / `QA_withDBpedia.py` chains these components (each is
 
 ### The template code system
 
-The classifier outputs an integer index into a `dictionary` list of short **template codes** (e.g. `'A'`, `'AA'`, `'AAB'`, `'BBB'`, `'D'`, `'abc'`, ...). In `SPARQLgeneration.SPARQLgeneration`, each character is dispatched to a triple-builder (`FunA`/`Funa`/`FunB`/`Funb`/`FunC`/`Func`/`FunD`). Uppercase vs lowercase encodes a variant of the same triple shape; `D` is the boolean/`ASK` template. `EndtoEnd.py` also carries an `ORG_dictionary` (older letter scheme) kept in parallel with the current `dictionary` — keep both index-aligned if you change one. When touching SPARQL output, treat the template code as the contract between the classifier and the generator.
+The classifier outputs an integer index into a `dictionary` list of short **template codes** (e.g. `'A'`, `'AA'`, `'AAB'`, `'BBB'`, `'D'`, `'abc'`, ...). In `SPARQLgeneration.SPARQLgeneration`, each character is dispatched to a triple-builder (`FunA`/`Funa`/`FunB`/`Funb`/`FunC`/`Func`/`FunD`). Uppercase vs lowercase encodes a variant of the same triple shape; `D` is the boolean/`ASK` template. The `dictionary` list must stay index-aligned with the classifier's output space. When touching SPARQL output, treat the template code as the contract between the classifier and the generator.
 
 ## Layout
 
