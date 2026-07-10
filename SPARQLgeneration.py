@@ -98,35 +98,41 @@ class SPARQLgeneration:
         self.ans = []
         self.query_number = 0
         self.Tolerance = []
+        # Per-call list of triple-pattern candidates, one entry per template
+        # character. Previously these were stored in module-level globals
+        # (globals()['Triple0'], ...), which was fragile and not reentrant.
+        self.triples = []
         count = len(template)
-        
+
         if RR !=[]:
             self.R = copy.deepcopy(RR)
-        
+
         for i, label in enumerate(template):
             if label =='A':
-                globals()['Triple'+str(i)] = self.FunA()
+                t = self.FunA()
             elif label == 'a':
-                globals()['Triple'+str(i)] = self.Funa()
+                t = self.Funa()
             elif label=='B':
-                globals()['Triple'+str(i)] = self.FunB()
+                t = self.FunB()
             elif label == 'b':
-                globals()['Triple'+str(i)] = self.Funb()
+                t = self.Funb()
             elif label == 'C':
-                globals()['Triple'+str(i)] = self.FunC()
+                t = self.FunC()
             elif label == 'c':
-                globals()['Triple'+str(i)] = self.Func()
+                t = self.Func()
             elif label=='D':
-                globals()['Triple'+str(i)] = self.FunD()    
+                t = self.FunD()
             else:
                 print(label)
                 print('some mistakes')
-        
+                t = []
+            self.triples.append(t)
+
         #將triple組合成SPARQL
         S =[]
         if count == 1:
             S = self.C1()
-       
+
         elif count == 2:
             S = self.C2()
             if S ==[]:
@@ -138,7 +144,11 @@ class SPARQLgeneration:
                 S = self.C2()
             if S ==[]:
                 S = self.C1()
-        
+        else:
+            # No combinator for templates of length 0 or >3; fail loudly
+            # instead of silently returning an empty answer set.
+            print('警告: 不支援的 template 長度 (count =', count, ')，無法產生查詢')
+
         S = list(set(S))
         print('number of Query : ',len(S))
         print('find triple : ',self.query_number)
@@ -169,22 +179,22 @@ class SPARQLgeneration:
     
     def C1(self):
         S=[]
-        for i in globals()['Triple0']:
+        for i in self.triples[0]:
             S.append(i)
         return S
-    
+
     def C2(self):
         S=[]
-        for i in globals()['Triple0']:
-            for j in globals()['Triple1']:
+        for i in self.triples[0]:
+            for j in self.triples[1]:
                 SPARQL = i+ j
-                S.append(SPARQL)   
+                S.append(SPARQL)
         return S
     def C3(self):
         S=[]
-        for i in globals()['Triple0']:
-            for j in globals()['Triple1']:
-                for k in globals()['Triple2']:
+        for i in self.triples[0]:
+            for j in self.triples[1]:
+                for k in self.triples[2]:
                     SPARQL = i+ j+ k
                     S.append(SPARQL)
         return S

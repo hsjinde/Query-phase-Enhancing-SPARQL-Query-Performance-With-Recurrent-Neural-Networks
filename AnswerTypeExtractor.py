@@ -103,7 +103,11 @@ class AnswerTypeExtractor:
                             remove_list.append(ans[i])
         for r in remove_list:
             print(r)
-            found_answer.remove(r)
+            # r may appear in remove_list more than once (an answer can be
+            # similar to several others); guard against removing it twice,
+            # which would raise ValueError and drop the whole answer set.
+            if r in found_answer:
+                found_answer.remove(r)
 
         found_answer = list(set(found_answer))
 
