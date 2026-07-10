@@ -24,8 +24,6 @@ class DBpediaQueries():
     # sparql查詢結果
     __isFound = False;
     __querySentence = ""
-    queryResult = []
-    PropertyqueryResult = []
 
     def __init__(self):
         # Per-instance query-result buffer. This was previously only a
@@ -53,7 +51,7 @@ class DBpediaQueries():
                     print('result_type:',result[target]["datatype"])
                 else:
                     self.__queryResult.append(result[target]["value"])
-            except:
+            except Exception:
                 print("didn't find results")
         self.__queryResult = list(set(self.__queryResult))
         
@@ -70,7 +68,7 @@ class DBpediaQueries():
         target = target.replace("?", "")        
         try:
             self.__queryResult.append(results['boolean'])
-        except:
+        except Exception:
             print("didn't find results")
         self.__queryResult = list(set(self.__queryResult))
     
@@ -92,7 +90,7 @@ class DBpediaQueries():
                     print('result_type:',result[target]["datatype"])
                 else:
                     self.__queryResult.append(result[target]["value"])
-            except:
+            except Exception:
                 print("didn't find results")
         self.__queryResult = list(set(self.__queryResult))
         #except:
@@ -115,7 +113,7 @@ class DBpediaQueries():
                         self.__queryResult.append(result[target2]["value"])
                         print(result[target]["value"])
                         print(result[target2]["value"])
-        except:
+        except Exception:
             print("didn't find results")
 
     # 三個target
@@ -140,7 +138,7 @@ class DBpediaQueries():
                             print(result[target]["value"])
                             print(result[target2]["value"])
                             print(result[target3]["value"])
-        except:
+        except Exception:
             print("didn't find results")        
     # ------------------------------------------------------------------------------
     # Name Entity
@@ -636,7 +634,7 @@ class DBpediaQueries():
                         #晉德 qald-9 test第61句有問題
                         try:
                             lemma +=  ws[j].getLemma() + ' '
-                        except:
+                        except Exception:
                             print('error')
                         print(lemma)
                         break;
@@ -647,7 +645,7 @@ class DBpediaQueries():
                 if (lemma != "" and lemma != nn):
                     print("尋找原型" + lemma + " 對應DBpedia class(SC)...")
                     LocalDbrMatcher.matchingClassLabel(lemma)
-            except:
+            except Exception:
                 print('error')
                 
             # 如果查詢有結果就將結果儲存

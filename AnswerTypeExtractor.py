@@ -14,7 +14,7 @@ class AnswerTypeExtractor:
         boolean = False
         try:
             varible = varible[0].lower()
-        except:
+        except Exception:
             varible = ''
         
         if varible == 'can' or varible == 'do' or varible == 'does' or varible == 'is' or varible == 'am' or varible == 'are' or varible == 'be' or varible == 'was' or varible == 'were':
@@ -37,7 +37,7 @@ class AnswerTypeExtractor:
                     self.answerType='Date'
                 else:
                     self.answerType = 'Thing'
-        except: 
+        except Exception:
             self.answerType='Thing'
 
         return self.answerType
@@ -70,7 +70,7 @@ class AnswerTypeExtractor:
             for result in results["results"]["bindings"]:
                 if result[target]["value"] not in self.queryResult:
                     self.queryResult.append(result[target]["value"])
-        except:
+        except Exception:
             print("didn't find results")
 
     

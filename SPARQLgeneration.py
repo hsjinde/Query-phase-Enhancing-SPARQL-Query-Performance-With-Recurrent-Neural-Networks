@@ -350,7 +350,7 @@ class SPARQLgeneration:
         try:
             E1 = self.E.pop()
             E2 = self.E.pop()
-        except:
+        except Exception:
             return Triple
         
         e1 = self.NamedEntity.get(E1).split('@')

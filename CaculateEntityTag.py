@@ -1,5 +1,8 @@
 def combineEntity_Tag(word_tag):
-    # 將tag轉成數字的dictionary
+    # 將tag轉成數字的dictionary。
+    # 每個角色 (V/R/E/C/...) 佔一段連號:B/I/E 依序 +0/+1/+2,角色之間留一個空號
+    # (例如 V-B=0..V-E=2,下一個 R-B 從 4 開始)。這樣「相鄰數字差 1」就代表
+    # 「同一個 entity 的下一個 B/I/E」,下面的合併邏輯與 ilist 都靠這個編碼運作。
     tag_dic = {"V-B": 0, "V-I": 1, "V-E": 2, "R-B": 4, "R-I": 5, "R-E": 6, "E-B": 8,
                "E-I": 9, "E-E": 10, "C-B": 12, "C-I": 13, "C-E": 14, "N": 16, "CR-B": 18, "CR-I": 19, "CE-B": 21, "CE-I": 22, "ER-B": 24, "ER-I": 25, "VR-B": 27, "VR-I": 28,
                "RR-B":30, "RR-I":31, "L-B":33, "L-I":34}
@@ -13,7 +16,14 @@ def combineEntity_Tag(word_tag):
 
     for i, element in enumerate(word_tag):
         tagg.append(tag_dic[word_tag[i]])
-        
+
+    # 單一 token(或空)問句不會進入下面的成對 while 迴圈,否則 combineTag 會是空字串、
+    # 導致下游斷詞錯誤。直接回傳單一 tag 與字數 1。
+    if len(tagg) <= 1:
+        if len(tagg) == 1:
+            return num_dic[tagg[0]], [1]
+        return "", []
+
     n_arr = []
     j = 0
     n = 0 #計算每個entity單字數

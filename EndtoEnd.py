@@ -117,7 +117,7 @@ class QA_withDBpedia():
                 dbq.clearResult()
                 answer, number_of_query, find_triple = SP.SPARQLgeneration(NamedEntity, Property, Class, E, R, RR, C, dictionary[r[0]])
                 end = time.time()
-            except:
+            except Exception:
                 print("no answer")
             print("所有找到的答案:", answer)
             
@@ -141,7 +141,7 @@ class QA_withDBpedia():
                     else:
                         found_answer = at.filterAnswer(answer)
                         print('found answer:' ,found_answer)
-                except:
+                except Exception:
                     print("沒有找到任何答案") 
 
             Performance.append([i,data_quesetion['Q'][i], data_quesetion['query'][i] , E , R , C, RR, dictionary[r[0]], number_of_query, find_triple, answer, data_quesetion['Answer'][i], found_answer,end - start])
