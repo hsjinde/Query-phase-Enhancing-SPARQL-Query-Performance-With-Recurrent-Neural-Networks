@@ -23,8 +23,14 @@ python -m pytest tests/ -q # 從 repo root 執行
 | `test_word_and_entityfinder.py` | `Word`、`EntityFinder` | 存取器、RR 特判、組合標記逐字元展開、未知角色被忽略 |
 | `test_answer_type_extractor.py` | `AnswerTypeExtractor` | 疑問詞→答案型別、`extractent` 正規化、Thing/Boolean/Date/Number(無 URI) 的 `filterAnswer` 分支 |
 
-## 以測試釘住的已知缺陷
+## 迴歸測試（釘住已修正的缺陷）
 
-- `test_number_of_phrase_is_shadowed_by_thing_branch`：`answerTypeExtracting` 裡
-  `'number of' in sent` 的判斷被前面 which/what/… 的 Thing 分支遮蔽，
-  導致「What is the number of …」類計數問句被誤判為 Thing。詳見 `CODE_REVIEW.md`。
+這些測試對應 `CODE_REVIEW.md` 所列並已修正的缺陷，防止回歸：
+
+- `test_number_of_phrase_triggers_number_even_with_thing_question_word`：#1
+  `answerTypeExtracting` 的 `'number of'` 計數判斷被 Thing 分支遮蔽（已提前修正）。
+- `test_unknown_tag_is_treated_as_non_entity`：#3 `combineEntity_Tag` 遇未知 tag
+  不再 KeyError，改當作 `N`。
+- `test_tag_acc_does_not_mutate_predict_input`：#5 `tag_acc` 不再就地修改傳入的 list。
+- `test_word_set_entity_url_dedupes_by_membership`：#6 `Word.__setEntityURL__` 去重
+  改用 list 成員判斷。

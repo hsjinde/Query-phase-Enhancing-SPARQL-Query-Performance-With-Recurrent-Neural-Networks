@@ -13,8 +13,22 @@ def test_word_basic_accessors():
     assert w.getLemma() == "berlin"
     assert w.getPos() == "NNP"
     assert w.getERC() == "E"
-    # 目前 __setEntityURL__ 從未被呼叫，getEntityURL 預期為空 list。
+    # __setEntityURL__ 未被呼叫時，getEntityURL 預期為空 list。
     assert w.getEntityURL() == []
+
+
+def test_word_set_entity_url_dedupes_by_membership():
+    # 迴歸測試：去重應以 list 成員判斷，而非對 list 字串表示做子字串比對。
+    # 「是既有 URL 子字串」的 URL 不應被誤判為重複而漏加。
+    w = Word("Berlin", "berlin", "NNP", "E")
+    # __setEntityURL__ 有雙尾底線，不觸發名稱修飾，可直接呼叫。
+    w.__setEntityURL__(["http://dbpedia.org/resource/Berlin"])
+    w.__setEntityURL__(["http://dbpedia.org/resource/Berlin"])  # 重複 → 不再加入
+    w.__setEntityURL__(["http://dbpedia.org/resource/Berlin_Wall"])  # 子字串包含既有 URL → 仍須加入
+    assert w.getEntityURL() == [
+        "http://dbpedia.org/resource/Berlin",
+        "http://dbpedia.org/resource/Berlin_Wall",
+    ]
 
 
 def test_entityfinder_routes_single_roles():

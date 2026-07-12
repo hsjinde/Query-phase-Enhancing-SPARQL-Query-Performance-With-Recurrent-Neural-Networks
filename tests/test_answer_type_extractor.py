@@ -45,18 +45,19 @@ def test_empty_variable_list_falls_back_to_thing(at):
     assert at.answerTypeExtracting([], "some question") == "Thing"
 
 
-def test_number_of_phrase_is_shadowed_by_thing_branch(at):
-    # BUG（釘住現況）：answerTypeExtracting 裡 'number of' in sent 的判斷放在
-    # elif，被前面 which/what/give/show/list/find/name 的 Thing 分支遮蔽。
-    # 因此像「What is the number of ...」這種計數問句，只要疑問詞是 what，
-    # 就會被誤判成 Thing，而不是預期的 Number。
-    assert at.answerTypeExtracting(["what"], "the number of moons") == "Thing"
+def test_number_of_phrase_triggers_number_even_with_thing_question_word(at):
+    # 迴歸測試：修正後 'number of' 的計數判斷排在 Thing 之前，
+    # 「What is the number of ...」這種計數問句即使疑問詞是 what 也會正確判為 Number。
+    assert at.answerTypeExtracting(["what"], "the number of moons") == "Number"
 
 
-def test_number_of_phrase_only_fires_for_unrecognised_question_word(at):
-    # 'number of' 這條啟發式規則目前只有在疑問詞「不屬於任何已知疑問詞」時才會生效，
-    # 這也佐證了上面那條分支遮蔽的 bug。
+def test_number_of_phrase_triggers_number_for_unrecognised_question_word(at):
     assert at.answerTypeExtracting(["banana"], "the number of moons") == "Number"
+
+
+def test_plain_thing_question_word_without_number_of_stays_thing(at):
+    # 沒有 'number of' 線索時，which/what 仍應維持 Thing，確認重排沒有誤傷一般問句。
+    assert at.answerTypeExtracting(["what"], "the capital of France") == "Thing"
 
 
 # --- extractent ---------------------------------------------------------------

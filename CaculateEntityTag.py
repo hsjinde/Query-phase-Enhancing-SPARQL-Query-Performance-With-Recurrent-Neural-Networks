@@ -15,7 +15,9 @@ def combineEntity_Tag(word_tag):
     combineTag = ""
 
     for i, element in enumerate(word_tag):
-        tagg.append(tag_dic[word_tag[i]])
+        # 未知標記(例如 tagger 偶發吐出組合標記的 -E 變體 'ER-E',或 'O')
+        # 一律當作非實體 'N' 處理,避免 KeyError 中斷整條 pipeline。
+        tagg.append(tag_dic.get(word_tag[i], tag_dic["N"]))
 
     # 單一 token(或空)問句不會進入下面的成對 while 迴圈,否則 combineTag 會是空字串、
     # 導致下游斷詞錯誤。直接回傳單一 tag 與字數 1。
@@ -63,6 +65,8 @@ def tag_acc(predict,y):
     n = 0
     # print(len(y))
     # print(len(predict))
+    # 複製一份再補齊,避免就地修改呼叫端傳入的 predict(副作用)。
+    predict = list(predict)
     if len(y)>len(predict):
         x = len(y) - len(predict)
         for _ in range(x):

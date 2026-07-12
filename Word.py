@@ -23,7 +23,9 @@ class Word():
 
     def __setEntityURL__(self, s=None):
         for url in (s or []):
-            if url not in str(self.__entityUrl):
+            # 以 list 成員判斷去重;先前用 `url not in str(self.__entityUrl)`
+            # 是對 list 的字串表示做子字串比對,會把「是既有 URL 子字串」的 URL 誤判為重複。
+            if url not in self.__entityUrl:
                 self.__entityUrl.append(url)
 
     # ---------------------------------------------------------

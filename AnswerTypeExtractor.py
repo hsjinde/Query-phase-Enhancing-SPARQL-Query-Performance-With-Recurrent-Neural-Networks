@@ -25,10 +25,13 @@ class AnswerTypeExtractor:
         try:
             if not boolean:
                 print(varible)
-                if varible.lower()=='which' or  varible.lower() =='what' or varible.lower() == 'give' or varible.lower() == 'show' or varible.lower() == 'list' or varible.lower() == 'find' or varible.lower() == 'name':
-                    self.answerType='Thing'
-                elif varible.lower()=='how many' or varible.lower()=='how much' or varible.lower() =='count' or varible.lower() =='number' or varible.lower() =='how' or 'number of' in sent.lower():
+                # 計數問句優先於 Thing 判斷：'number of' 這個線索常出現在
+                # 「What/Which is the number of ...」中,若先命中 Thing 分支就會被遮蔽,
+                # 導致計數問句被誤判為 Thing,所以這一段必須排在 Thing 之前。
+                if varible.lower()=='how many' or varible.lower()=='how much' or varible.lower() =='count' or varible.lower() =='number' or varible.lower() =='how' or 'number of' in sent.lower():
                     self.answerType='Number'
+                elif varible.lower()=='which' or  varible.lower() =='what' or varible.lower() == 'give' or varible.lower() == 'show' or varible.lower() == 'list' or varible.lower() == 'find' or varible.lower() == 'name':
+                    self.answerType='Thing'
                 elif varible.lower()=='who' or  varible.lower() =='whom' or  varible.lower() =='whose':
                     self.answerType='Person or Organization'
                 elif varible.lower()=='where':
