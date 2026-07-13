@@ -673,13 +673,16 @@ class DBpediaQueries():
                     print("找不到" + nn + " 對應的class(SC)")
                     classExtracting_classSet[nn] = '?C'
                 else:
+                    # 先在迴圈內累加所有比對到的 class URI,迴圈「外」才 clear;
+                    # 若在迭代同一個 list 時就 clear,迭代會在第一筆後中止,
+                    # 導致同義詞/衍生詞比對到的其餘 class 被丟棄(對照上方 if 分支的正確寫法)。
                     for url in LocalDbrMatcher.getMatchedUrl():
                         classurl += "<" + url + ">@"
-                        classExtracting_classSet[nn] = classurl
-                        LocalDbrMatcher.getMatchedUrl().clear()
-                        classurl = ""
-                        print("The '" + nn + "' 對應DBpedia class(SC):", len(classExtracting_classSet))
-                        #print(classExtracting_classSet)
+                    classExtracting_classSet[nn] = classurl
+                    LocalDbrMatcher.getMatchedUrl().clear()
+                    classurl = ""
+                    print("The '" + nn + "' 對應DBpedia class(SC):", len(classExtracting_classSet))
+                    #print(classExtracting_classSet)
         return classExtracting_classSet
 
     def getQueryResult(self):

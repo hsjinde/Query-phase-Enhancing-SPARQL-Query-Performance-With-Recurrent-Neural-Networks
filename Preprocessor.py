@@ -18,7 +18,7 @@ class Preprocessor():
 
         # tokenize
         sent = sentence.strip()
-        if sent[-1] in string.punctuation:
+        if sent and sent[-1] in string.punctuation:
             sent = sent[:-1].strip()
         punt = ',?'
         for p in punt:
